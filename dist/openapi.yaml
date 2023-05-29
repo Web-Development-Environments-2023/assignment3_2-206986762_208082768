@@ -1,22 +1,33 @@
 openapi: 3.0.0
+
 info:
-  title: Recipes api
+  title: Recipes API
   description: API for recipes project
   version: 1.0.1
+
 servers:
 # local:
 - url: "http://127.0.0.1:3000"
 # remote:
-# - url: "http://132.72.65.211"
+- url: "https://FlavorFusion.cs.bgu.ac.il"
   description: SwaggerHub API Auto Mocking hey
+
 tags:
 - name: Auth
-  description: All authentication related routes
+  description: All authentication related routes.
 - name: Users
-  description: All the user's personal app info
+  description: All the user's personal app info.
 - name: Recipes
-  description: All reciepes general info
+  description: All reciepes general info.
+
+
+################################################################################################
+######################################## ALL PATHS #############################################
+
 paths:
+
+  ####################### Authentication ############################
+
   /register:
     post:
       tags:
@@ -32,15 +43,17 @@ paths:
         required: true
       responses:
         "201":
-          description: A new user has been added
+          description: A new user has been added.
         "400":
-          description: wrong input parameters
+          description: Wrong input parameters.
+  
+  
   /login:
     post:
       tags:
       - Auth
       summary: Login an exist user
-      description: An exist user login to the system
+      description: An exist user login to the system.
       requestBody:
         content:
           application/json:
@@ -50,7 +63,7 @@ paths:
       responses:
         "200":
           description: |
-            User was found in the DB and authenitcated successfully. The session ID is returned in a cookie named `session`.  You should include this cookie in subsequent requests
+            User was found in the DB and authenitcated successfully. The session ID is returned in a cookie named `session`.  You should include this cookie in subsequent requests.
           headers:
             Set-Cookie:
               style: simple
@@ -59,24 +72,30 @@ paths:
                 type: string
                 example: session=87s97sdhgf279293f8w0e9
         "401":
-          description: Authentication failed
+          description: Authentication failed.
+  
+  
   /logout:
     post:
       tags:
         - Auth
-      summary: logout a user from the system and delete his cookie
+      summary: Logout a user from the system and delete his cookie
       responses:
         "200":
-          description: "the user has ben successfully logged out"
+          description: The user has ben successfully logged out.
+  
+  
+  ############################ Users ################################
+
   /users/favorites:
     get:
       tags:
       - Users
-      summary: Return the favorite recipes that were saved by user
-      description: Get an array of recipes that were saved by a specific user
+      summary: Return all the favorite recipes that were saved by user
+      description: Get an array of recipes that were saved by a specific user.
       responses:
         "200":
-          description: data about the user's favorites recipes returned
+          description: Data about the user's favorites recipes returned.
           content:
             application/json:
               schema:
@@ -84,14 +103,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/RecipePreview'
         "401":
-          description: user is not authorized
+          description: User is not authorized.
       security:
       - cookieAuth: []
+    
     post:
       tags:
       - Users
-      summary: save recipe in the favorites list of a user
-      description: save recipe in the favorites list of a user
+      summary: Save recipe in the favorites list of a user
+      description: Save recipe in the favorites list of a user.
       requestBody:
         content:
           application/json:
@@ -100,25 +120,78 @@ paths:
               properties:
                 reciepeId:
                   type: string
-                  description: reciepe's id which the user saved
+                  description: Reciepe's id which the user saved.
                   example: 716429
       responses:
         "200":
-          description: The Recipe successfully saved as favorite
+          description: The Recipe successfully saved as favorite.
         "401":
-          description: user is not authorized
+          description: User is not authorized.
       security:
       - cookieAuth: []
+
+    
+  /users/myAllRecipes:
+    get:
+      tags:
+        - Users
+      summary: Get all the recipes that the user has created
+      description: Get an array of all the recipes that were created by the user.
+      responses:
+        "200":
+          description: Successfully returned all recipes.
+        "401":
+          description: User is not authorized.
+        "404":
+          description: User not found.
+      security:
+        - cookieAuth: []
+  
+
+  /users/lastWatchedRecipes:
+    get:
+      tags:
+        - Users
+      summary: Get 3 last watched recipes by the logged in user
+      description: Return 3 last watched recipes by the logged in user.
+      responses:
+        "200":
+          description: Successfully returned 3 last watched recipes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        "400":
+          description: Invalid input.
+
+
+  /users/familyRecipes:
+    get:
+      tags:
+        - Users
+      summary: Get a detail of user's family recipes.
+      description: A json object contains all the details about recipes of the user's family.
+      responses:
+        "200":
+          description: A detail of a user's family recipes.
+        "401":
+          description: User is not authorized.
+
+
+  ########################### Recipes ###############################
+  
   /recipes/{recipeId}:
     get:
       tags:
       - Recipes
       summary: Return preview details on recipe by his ID
-      description: Return preview details on recipe by his ID
+      description: Return preview details on recipe by his ID.
       parameters:
       - name: recipeId
         in: path
-        description: recipe's id
+        description: Tecipe's id.
         required: true
         style: simple
         explode: false
@@ -126,15 +199,100 @@ paths:
           type: integer
       responses:
         "200":
-          description: data about the recipe
+          description: Data about the recipe.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipePreview'
         "404":
-          description: recipeId is not exists
+          description: Recipe ID is not exists.
+
+
+  /users/createRecipe:
+    post:
+      tags:
+        - recipe
+      summary: Create a new recipe.
+      description: A JSON/YAML file contains everything needed for recipe creating.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+        description: Recipe to add.
+      responses:
+        "201":
+          description: A new recipe has been added.
+        "400":
+          description: Wrong input data.
+
+  
+  /recipes/randomRecipes:
+    get:
+      tags:
+        - Recipes
+      summary: Return 3 random recipes.
+      description: Get 3 random recipes
+      responses:
+        "200":
+          description: Successfully returned 3 random recipes.
+        "400":
+          description: invalid input.
+
+
+  /recipes/familyRecipes:
+    post:
+      tags:
+        - Recipes
+      summary: Create family recipe.
+      description: Create family recipe by the logged in user.
+      responses:
+        "201":
+          description: New recipe created.
+        "401":
+          description: User is not authorized.
+        "400":
+          description: iIvalid input.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFamilyRecipe'
+
+
+  /recipes/search:
+    post:
+      tags:
+        - Recipes
+      summary: Search for recipes from spoonacular, External API.
+      description: Return the some recipes according to the user input number, 5 by defualt.
+       responses:
+        "200":
+          description: Successfully returned search results.
+           description: A list of a recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        "400":
+          description: invalid input.
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Search'
+
+
+
+################################################################################################
+######################################## COMPONENTS ############################################
+
 components:
   schemas:
+    
     User:
       type: object
       properties:
@@ -142,32 +300,32 @@ components:
           maxLength: 8
           minLength: 3
           type: string
-          description: username conatins between 3 to 8 letters only
+          description: Username conatins between 3 to 8 letters only.
           example: my_name
         firstname:
           type: string
-          description: user's first name
+          description: User's first name.
           example: my_first_name
         lastname:
           type: string
-          description: user's last name
+          description: User's last name.
           example: my_last_name
         country:
           type: string
-          description: user's country
+          description: User's country.
           example: Israel
         password:
           maxLength: 10
           minLength: 5
           type: string
-          description: password conatins between 5 to 10 chars, at least one of them
-            is a number and a special char
+          description: Password conatins between 5 to 10 chars, at least one of them
+            is a number and a special char.
           format: password
           example: my_name@12
         email:
           pattern: email
           type: string
-          description: user's email
+          description: User's email.
           example: my_name12@gmail.com
         # image-url:
         #   pattern: URL
@@ -175,6 +333,7 @@ components:
         #   description: URL for the user's image
         #   example: https://cloudinary.com/
       description: Model containing user info
+    
     LoginScheme:
       type: object
       properties:
@@ -182,49 +341,209 @@ components:
           maxLength: 8
           minLength: 3
           type: string
-          description: username conatins letters only
+          description: Username conatins letters only.
         password:
           maxLength: 10
           minLength: 5
-          description: password conatins at least one number and one special char
+          description: Password conatins at least one number and one special char.
           format: password
       example:
         username: my_name
         password: my_name@12
+    
     RecipePreview:
       type: object
       properties:
         id:
           type: integer
-          description: recipe identifier
+          description: Recipe identifier.
           example: 102
         title:
           type: string
-          description: recipe name
+          description: Recipe name.
           example: Simple Macaroni and Cheese
         image:
           type: string
-          description: recipe image
+          description: Recipe image.
           format: URL
           example: https://spoonacular.com/recipeimages/655455-566x370.jpg
         readyInMinutes:
           type: integer
-          description: the time takes to make this recipe
+          description: The time takes to make this recipe.
           example: 45
         popularity:
           type: integer
-          description: how many likes got this recipe
+          description: How many likes got this recipe.
           example: 5987
         vegetarian:
           type: boolean
-          description: indication if the recipe is vegetarian
+          description: Indication if the recipe is vegetarian.
           example: false
         vegan:
           type: boolean
-          description: indication if the recipe is vegan
+          description: Indication if the recipe is vegan.
           example: false
         glutenFree:
           type: boolean
-          description: indication if the recipe is gluten free
+          description: Indication if the recipe is gluten free.
           example: false
-  
+
+      Recipe:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: Recipe identifier.
+            example: 102
+          image:
+            type: string
+            description: Recipe image.
+            format: URL
+            example: https://spoonacular.com/recipeimages/655455-566x370.jpg
+          title:
+            type: string
+            description: Recipe name.
+            example: Simple Macaroni and Cheese.
+          readyInMinutes:
+            type: integer
+            description: The time takes to make this recipe.
+            example: 45
+          popularity:
+            type: integer
+            description: How many likes got this recipe.
+            example: 5987
+          vegetarian:
+            type: boolean
+            description: Indication if the recipe is vegetarian.
+            example: false
+          vegan:
+            type: boolean
+            description: Indication if the recipe is vegan.
+            example: false
+          glutenFree:
+            type: boolean
+            description: Indication if the recipe is gluten free.
+            example: false
+          isClicked:
+            type: boolean
+          Favorite:
+            type: boolean
+          instructions:
+            type: string
+          servings:
+            type: integer
+          description: 
+            type: string
+            description: The recipe itself.
+          ingredients:
+            type: array
+            items:
+              type: object
+              properties:
+                ingredient:
+                  type: string
+                amount:
+                  type: string
+              required: 
+                - ingredient
+                - amount
+
+      CreateFamilyRecipe:
+        type: object
+          properties:
+            id:
+              type: integer
+              description: Recipe identifier.
+              example: 102
+            image:
+              type: string
+              description: Recipe image.
+              format: URL
+              example: https://spoonacular.com/recipeimages/655455-566x370.jpg
+            title:
+              type: string
+              description: Recipe name.
+              example: Simple Macaroni and Cheese.
+            readyInMinutes:
+              type: integer
+              description: The time takes to make this recipe.
+              example: 45
+            popularity:
+              type: integer
+              description: How many likes got this recipe.
+              example: 5987
+            vegetarian:
+              type: boolean
+              description: Indication if the recipe is vegetarian.
+              example: false
+            vegan:
+              type: boolean
+              description: Indication if the recipe is vegan.
+              example: false
+            glutenFree:
+              type: boolean
+              description: Indication if the recipe is gluten free.
+              example: false
+            isClicked:
+              type: boolean
+            Favorite:
+              type: boolean
+            instructions:
+              type: string
+            servings:
+              type: integer
+            description: 
+              type: string
+              description: The recipe itself.
+
+            owner:
+              type: string
+              description: Username of the creator.
+              example: johndoe
+
+            whenToPrepare: 
+              type: string
+              description: The time to prepare.
+              example: holidays
+
+            ingredients:
+              type: array
+              items:
+                type: object
+                properties:
+                  ingredient:
+                    type: string
+                  amount:
+                    type: string
+                required: 
+                  - ingredient
+                  - amount
+
+      Search:
+        type: object
+        properties:
+          query:
+            type: string
+            description: Recipes name that the user want to search, the user can filter by cuisine, diet and intolerance.
+            required: true
+            example: Simple Macaroni and Cheese.
+          number:
+            type: integer
+            description: Number of recipes to return, the options are 5 10 15 and the default value is 5.
+            required: false
+            example: 5
+          cuisine:
+            type: string
+            description: List of categories cuisine that the logged in user can filter by them.
+            required: false
+            example: Italian
+          diet:
+            type: string
+            description: List of categories diet that the logged in user can filter by them.
+            required: false
+            example: Vegan
+          intolerance:
+            type: string
+            description: List of categories intolerance that the logged in user can filter by them.
+            required: false
+            example: Steak
