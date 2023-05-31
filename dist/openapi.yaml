@@ -178,6 +178,24 @@ paths:
           description: A detail of a user's family recipes.
         "401":
           description: User is not authorized.
+    
+    post:
+      tags:
+        - Recipes
+      summary: Create family recipe.
+      description: Create family recipe by the logged in user.
+      responses:
+        "201":
+          description: New recipe created.
+        "401":
+          description: User is not authorized.
+        "400":
+          description: iIvalid input.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFamilyRecipe'
 
 
   ########################### Recipes ###############################
@@ -208,7 +226,7 @@ paths:
           description: Recipe ID is not exists.
 
 
-  /users/createRecipe:
+  /recipes/createRecipe:
     post:
       tags:
         - recipe
@@ -241,28 +259,8 @@ paths:
           description: invalid input.
 
 
-  /recipes/familyRecipes:
-    post:
-      tags:
-        - Recipes
-      summary: Create family recipe.
-      description: Create family recipe by the logged in user.
-      responses:
-        "201":
-          description: New recipe created.
-        "401":
-          description: User is not authorized.
-        "400":
-          description: iIvalid input.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateFamilyRecipe'
-
-
   /recipes/search:
-    post:
+    get:
       tags:
         - Recipes
       summary: Search for recipes from spoonacular, External API.

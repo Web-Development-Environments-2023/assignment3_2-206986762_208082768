@@ -38,8 +38,23 @@ async function getRecipeDetails(recipe_id) {
 }
 
 
+async function getRecipesPreview( recipes_id_array ){
+    let recipesPreview = []
+    for (const recipe_id of recipes_id_array) {
+        let recipe_preview = await getRecipeDetails(recipe_id)
+        recipesPreview.push(recipe_preview)
+    }
+    return recipesPreview
+}
+
+
+
+// #####################################################################################################
+// ##################################### Export all functions ##########################################
+
 
 exports.getRecipeDetails = getRecipeDetails;
+exports.getRecipesPreview = getRecipesPreview;
 
 
 

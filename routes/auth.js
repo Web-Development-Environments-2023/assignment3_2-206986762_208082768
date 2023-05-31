@@ -11,8 +11,8 @@ router.post("/Register", async (req, res, next) => {
     // username exists
     let user_details = {
       username: req.body.username,
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
+      firstname: req.body.first_name,
+      lastname: req.body.last_name,
       country: req.body.country,
       password: req.body.password,
       email: req.body.email,
