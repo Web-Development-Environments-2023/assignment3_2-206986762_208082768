@@ -247,7 +247,7 @@ paths:
 
   
   /recipes/randomRecipes:
-    get:
+    post:
       tags:
         - Recipes
       summary: Return 3 random recipes.
@@ -260,7 +260,7 @@ paths:
 
 
   /recipes/search:
-    get:
+    post:
       tags:
         - Recipes
       summary: Search for recipes from spoonacular, External API.
