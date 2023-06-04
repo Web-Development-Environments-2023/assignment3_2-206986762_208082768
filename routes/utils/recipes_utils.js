@@ -96,8 +96,19 @@ async function getRandomRecipes(){
 }
 
 
-async function addNewRecipe(){
-    //TODO complete this function
+async function addNewRecipe(req){
+    const user_id = req.session.user_id;
+    const title = req.body.title;
+    const readyInMinutes = req.body.readyInMinutes;
+    const vegetarian = req.body.vegetarian;
+    const vegan = req.body.vegan;
+    const glutenFree = req.body.glutenFree;
+    const servings = req.body.servings;
+    const instructions = req.body.instructions;
+    const ingredients = req.body.ingredients;
+    await DButils.execQuery(
+        `INSERT INTO recipes (user_id, title, readyInMinutes, vegetarian, vegan, glutenFree, servings, instructions, ingredients) VALUES (${user_id}, '${title}', ${readyInMinutes}, ${vegetarian}, ${vegan}, ${glutenFree}, ${servings}, '${instructions}', '${JSON.stringify(ingredients)}')`
+    )
 }
 
 

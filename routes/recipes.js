@@ -53,8 +53,26 @@ router.post("/randomRecipes", async (req, res, next) => { //done and checked
  */
 router.post("/createRecipe", async (req, res, next) => {
   try {
-    const newRecipes = await recipes_utils.addNewRecipe();
-    res.send(newRecipes);
+    const user_id = req.session.user_id;
+    if (!user_id) {
+      throw { status: 401, message: "Please Login to add new recipe." };
+    }
+
+    // const title = req.body.title;
+    // const readyInMinutes = req.body.readyInMinutes;
+    // const vegetarian = req.body.vegetarian;
+    // const vegan = req.body.vegan;
+    // const glutenFree = req.body.glutenFree;
+    // const servings = req.body.serving
+    // const instructions = req.body.instructions;
+    // const ingredients =req.body.ingrediants;
+    
+    // if(!title || !readyInMinutes || !vegetarian || !vegan || !glutenFree || !servings || !instructions || !ingredients){
+    //     throw { status: 400, message: "Bad Request" };
+    // }
+
+    await recipes_utils.addNewRecipe(req);
+    res.status(201).send("Recipe was added successfully!");
   } 
   catch (error) {
     next(error);
