@@ -166,7 +166,30 @@ paths:
         "400":
           description: Invalid input.
 
+    post:
+      tags:
+      - Users
+      summary: Save recipe in the watch list of a user
+      description: Save recipe in the watch list of a user.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reciepeId:
+                  type: string
+                  description: Reciepe's id which the user saved.
+                  example: 716429
+      responses:
+        "200":
+          description: The Recipe successfully saved as viewd.
+        "401":
+          description: User is not authorized.
+      security:
+      - cookieAuth: []
 
+    
   /users/familyRecipes:
     get:
       tags:
@@ -198,6 +221,32 @@ paths:
               $ref: '#/components/schemas/CreateFamilyRecipe'
 
 
+  /users/familyRecipes/{recipeId}:
+    get:
+      tags:
+      - Recipes
+      summary: Return preview details on family recipe by his ID
+      description: Return preview details on family recipe by his ID.
+      parameters:
+      - name: recipeId
+        in: path
+        description: Recipe's id.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Data about the family recipe.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipePreview'
+        "404":
+          description: Recipe ID is not exists.
+
+
   ########################### Recipes ###############################
   
   /recipes/{recipeId}:
@@ -209,7 +258,7 @@ paths:
       parameters:
       - name: recipeId
         in: path
-        description: Tecipe's id.
+        description: Recipe's id.
         required: true
         style: simple
         explode: false

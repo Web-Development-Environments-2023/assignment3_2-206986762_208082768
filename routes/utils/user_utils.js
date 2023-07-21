@@ -30,9 +30,15 @@ async function getMyFamilyRecipes(user_id){
 }
 
 
+async function getFamilyRecipe(user_id, recipe_id){
+    const familyRecipe = await DButils.execQuery(`SELECT * FROM family_recipes WHERE user_id = ${user_id} AND recipe_id = ${recipe_id}`);
+    return familyRecipe;
+}
+
+
 async function markAsWatched(user_id, recipe_id){
     const checkRecipes = await DButils.execQuery(`SELECT COUNT(*) FROM last_watched_recipes WHERE user_id=${user_id} AND recipe_id=${recipe_id}`);
-    if (checkRecipes == 0){
+    if (checkRecipes[0]['COUNT(*)'] == 0){
         await DButils.execQuery(`INSERT INTO last_watched_recipes VALUES ('${user_id}',${recipe_id}, NOW())`);
     }
 
@@ -58,5 +64,6 @@ exports.getFavoriteRecipes = getFavoriteRecipes;
 exports.getMyRecipes = getMyRecipes;
 exports.markAsFamilyRecipe = markAsFamilyRecipe;
 exports.getMyFamilyRecipes = getMyFamilyRecipes;
+exports.getFamilyRecipe = getFamilyRecipe;
 exports.markAsWatched = markAsWatched;
 exports.getLastWatchedRecipes = getLastWatchedRecipes;

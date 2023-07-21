@@ -18,9 +18,20 @@ async function getRecipeInformation(recipe_id) {
 }
 
 
+async function getAnalyzedInstructions(recipe_id) {
+    return await axios.get(`${api_domain}/${recipe_id}/analyzedInstructions`, {
+        params: {
+            stepBreakdown: false,
+            apiKey: process.env.spooncular_apiKey
+        }
+    });
+}
+
+
 async function getRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
-    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
+    let Ainstructions = await getAnalyzedInstructions(recipe_id);
+    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree, extendedIngredients, instructions } = recipe_info.data;
 
     return {
         id: id,
@@ -31,7 +42,9 @@ async function getRecipeDetails(recipe_id) {
         vegan: vegan,
         vegetarian: vegetarian,
         glutenFree: glutenFree,
-        
+        extendedIngredients: extendedIngredients,
+        instructions: instructions,
+        analyzedInstructions: Ainstructions.data
     }
 }
 

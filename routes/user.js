@@ -34,7 +34,7 @@ router.use(async function (req, res, next) {
 router.post('/favorites', async (req,res,next) => { //done and checked
   try{
     const user_id = req.session.user_id;
-    const recipe_id = req.body.recipe_id;
+    const recipe_id = req.body.recipeId;
     await user_utils.markAsFavorite(user_id,recipe_id);
     res.status(200).send("The Recipe successfully saved as favorite.");
   } 
@@ -90,7 +90,7 @@ router.get('/myAllRecipes', async (req,res,next) => { //done and checked
 router.post('/lastWatchedRecipes', async (req,res,next) => { //done and checked
   try{
     const user_id = req.session.user_id;
-    const recipe_id = req.body.recipe_id;
+    const recipe_id = req.body.recipeId;
     await user_utils.markAsWatched(user_id,recipe_id);
     res.status(200).send("The Recipe successfully saved as viewed.");
   } 
@@ -121,7 +121,7 @@ router.get('/lastWatchedRecipes', async (req,res,next) => { //done and checked
 
 
 /**
- * This path add a recipe that were viewed by the logged-in user to the watched list.
+ * This path add a family recipe by the logged-in user to the family list.
  */
 router.post('/familyRecipes', async (req,res,next) => { //done and checked
   try{
@@ -158,6 +158,24 @@ router.get('/familyRecipes', async (req,res,next) => { //done and checked
     }
     const recipes = await user_utils.getMyFamilyRecipes(user_id);
     res.status(200).send(recipes);
+  }
+  catch(error){
+    next(error);
+  }
+});
+
+
+/**
+ * This path returns specific family recipe by its id.
+ */
+router.get('/familyRecipes/:recipeId', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    if (!user_id) {
+      throw { status: 401, message: "Please Login to view your family recipe." };
+    }
+    const recipe = await user_utils.getFamilyRecipe(user_id, req.params.recipeId);
+    res.status(200).send(recipe);
   }
   catch(error){
     next(error);
