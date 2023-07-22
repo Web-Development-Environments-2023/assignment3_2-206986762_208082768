@@ -109,7 +109,7 @@ async function getRandomRecipes(){
 }
 
 
-async function addNewRecipe(req){
+async function addNewRecipe(req) {
     const user_id = req.session.user_id;
     const title = req.body.title;
     const readyInMinutes = req.body.readyInMinutes;
@@ -119,10 +119,26 @@ async function addNewRecipe(req){
     const servings = req.body.servings;
     const instructions = req.body.instructions;
     const ingredients = req.body.ingredients;
-    await DButils.execQuery(
-        `INSERT INTO recipes (user_id, title, readyInMinutes, vegetarian, vegan, glutenFree, servings, instructions, ingredients) VALUES (${user_id}, '${title}', ${readyInMinutes}, ${vegetarian}, ${vegan}, ${glutenFree}, ${servings}, '${instructions}', '${JSON.stringify(ingredients)}')`
-    )
-}
+    const imageUrl = req.body.imageUrl;
+  
+    await DButils.execQuery(`
+      INSERT INTO recipes (
+        user_id, title, readyInMinutes, vegetarian, vegan, glutenFree, servings, instructions, ingredients, image_url
+      ) VALUES (
+        ${user_id},
+        '${title}',
+        ${readyInMinutes},
+        ${vegetarian},
+        ${vegan},
+        ${glutenFree},
+        ${servings},
+        '${instructions}',
+        '${JSON.stringify(ingredients)}',
+        '${imageUrl}' 
+      )
+    `);
+  }
+  
 
 
 
