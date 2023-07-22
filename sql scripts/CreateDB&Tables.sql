@@ -31,7 +31,7 @@ CREATE TABLE last_watched_recipes (
 
 
 CREATE TABLE recipes (
-  recipes_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  recipe_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   title VARCHAR(150) NOT NULL,
   readyInMinutes INT NOT NULL,
@@ -41,9 +41,9 @@ CREATE TABLE recipes (
   servings INT NOT NULL,
   instructions TEXT NOT NULL,
   ingredients JSON NOT NULL,
+  image_url VARCHAR(255) NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
-
 
 CREATE TABLE family_recipes (
   recipe_id INT NOT NULL AUTO_INCREMENT,
@@ -55,9 +55,9 @@ CREATE TABLE family_recipes (
   vegetarian BOOLEAN NOT NULL,
   vegan BOOLEAN NOT NULL,
   glutenFree BOOLEAN NOT NULL,
-  image BLOB,
+  image VARCHAR(255) NOT NULL,
   instructions TEXT NOT NULL,
-  ingredients TEXT NOT NULL,
+  ingredients JSON NOT NULL,
   PRIMARY KEY (recipe_id, user_id),
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
