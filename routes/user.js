@@ -85,6 +85,24 @@ router.get('/myAllRecipes', async (req,res,next) => { //done and checked
 
 
 /**
+ * This path returns specific user recipe by its id.
+ */
+router.get('/myAllRecipes/:recipeId', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    if (!user_id) {
+      throw { status: 401, message: "Please Login to view your recipe." };
+    }
+    const recipe = await user_utils.getMyRecipe(user_id, req.params.recipeId);
+    res.status(200).send(recipe);
+  }
+  catch(error){
+    next(error);
+  }
+});
+
+
+/**
  * This path add a recipe that were viewed by the logged-in user to the watched list.
  */
 router.post('/lastWatchedRecipes', async (req,res,next) => { //done and checked

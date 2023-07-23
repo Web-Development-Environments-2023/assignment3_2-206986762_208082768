@@ -41,7 +41,7 @@ CREATE TABLE recipes (
   servings INT NOT NULL,
   instructions TEXT NOT NULL,
   ingredients JSON NOT NULL,
-  image_url VARCHAR(255) NOT NULL,
+  image VARCHAR(255) NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 

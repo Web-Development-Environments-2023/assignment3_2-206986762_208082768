@@ -119,11 +119,11 @@ async function addNewRecipe(req) {
     const servings = req.body.servings;
     const instructions = req.body.instructions;
     const ingredients = req.body.ingredients;
-    const imageUrl = req.body.imageUrl;
+    const image = req.body.image;
   
     await DButils.execQuery(`
       INSERT INTO recipes (
-        user_id, title, readyInMinutes, vegetarian, vegan, glutenFree, servings, instructions, ingredients, image_url
+        user_id, title, readyInMinutes, vegetarian, vegan, glutenFree, servings, instructions, ingredients, image
       ) VALUES (
         ${user_id},
         '${title}',
@@ -134,7 +134,7 @@ async function addNewRecipe(req) {
         ${servings},
         '${instructions}',
         '${JSON.stringify(ingredients)}',
-        '${imageUrl}' 
+        '${image}' 
       )
     `);
   }

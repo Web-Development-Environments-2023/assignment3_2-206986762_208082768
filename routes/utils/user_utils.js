@@ -14,10 +14,13 @@ async function getFavoriteRecipes(user_id) {
 }
 
 async function getMyRecipes(user_id) {
-  const myRecipes = await DButils.execQuery(
-    `SELECT * FROM recipes WHERE user_id=${user_id}`
-  );
-  return myRecipes;
+    const myRecipes = await DButils.execQuery(`SELECT * FROM recipes WHERE user_id=${user_id}`);
+    return myRecipes;
+}
+
+async function getMyRecipe(user_id, recipe_id) {
+    const myRecipe = await DButils.execQuery(`SELECT * FROM recipes WHERE user_id = ${user_id} AND recipe_id = ${recipe_id}`);
+    return myRecipe;
 }
 
 async function markAsFamilyRecipe(
@@ -49,9 +52,7 @@ async function getMyFamilyRecipes(user_id) {
 }
 
 async function getFamilyRecipe(user_id, recipe_id) {
-  const familyRecipe = await DButils.execQuery(
-    `SELECT * FROM family_recipes WHERE user_id = ${user_id} AND recipe_id = ${recipe_id}`
-  );
+  const familyRecipe = await DButils.execQuery(`SELECT * FROM family_recipes WHERE user_id = ${user_id} AND recipe_id = ${recipe_id}`);
   return familyRecipe;
 }
 
@@ -83,6 +84,7 @@ async function getLastWatchedRecipes(user_id) {
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
 exports.getMyRecipes = getMyRecipes;
+exports.getMyRecipe = getMyRecipe;
 exports.markAsFamilyRecipe = markAsFamilyRecipe;
 exports.getMyFamilyRecipes = getMyFamilyRecipes;
 exports.getFamilyRecipe = getFamilyRecipe;
